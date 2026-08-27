@@ -1,92 +1,150 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>Flap Clock</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Archivo:ital,wght@0,500;0,600;1,500&display=swap');
 
-  :root {
-    --bg: #0a0b0d;
-    --bg-glow: #191510;
-    --panel: #201f1e;
-    --panel-lo: #161514;
-    --seam: #030303;
-    --ink: #f0e9da;
-    --ink-dim: #a89f8d;
-    --accent: #d98a3d;
-    --accent-dim: #6b4a26;
+  * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
   }
-
-  * { box-sizing: border-box; }
 
   html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    background: var(--bg);
     overflow: hidden;
     -webkit-user-select: none;
-    user-select: none;
-    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
   }
 
   body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-family: "Archivo", "Helvetica Neue", Arial, sans-serif;
-    background:
-      radial-gradient(ellipse 70% 55% at 50% 42%, var(--bg-glow) 0%, var(--bg) 68%);
+    background-color: #0a0b0d;
+    position: relative;
   }
+
+  /* ============ skin: base backgrounds ============ */
+
+  body.skin-classic {
+    background-color: #0a0b0d;
+    background: -webkit-radial-gradient(50% 42%, ellipse farthest-side, #191510 0%, #0a0b0d 68%);
+  }
+
+  body.skin-volumetric {
+    background-color: #06070a;
+    background: -webkit-radial-gradient(50% 38%, ellipse farthest-side, #12161f 0%, #06070a 70%);
+  }
+
+  body.skin-fire { background-color: #0c0503; }
+
+  body.skin-neon {
+    background-color: #05050a;
+    background: -webkit-radial-gradient(50% 60%, ellipse farthest-side, #100a1c 0%, #05050a 72%);
+  }
+
+  /* ============ fire skin: animated glow blobs ============ */
+
+  .flame {
+    display: none;
+    position: absolute;
+    bottom: -220px;
+    width: 480px;
+    height: 480px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    pointer-events: none;
+  }
+  body.skin-fire .flame { display: block; }
+
+  .flame-a {
+    left: 50%;
+    margin-left: -240px;
+    background: -webkit-radial-gradient(50% 50%, ellipse farthest-side, rgba(255,140,40,0.55) 0%, rgba(255,90,20,0.0) 70%);
+    -webkit-animation: flamePulseA 3.6s ease-in-out infinite;
+  }
+  .flame-b {
+    left: 18%;
+    background: -webkit-radial-gradient(50% 50%, ellipse farthest-side, rgba(255,80,30,0.4) 0%, rgba(255,60,10,0.0) 70%);
+    -webkit-animation: flamePulseB 4.4s ease-in-out infinite;
+  }
+  .flame-c {
+    left: 68%;
+    background: -webkit-radial-gradient(50% 50%, ellipse farthest-side, rgba(255,170,60,0.4) 0%, rgba(255,110,20,0.0) 70%);
+    -webkit-animation: flamePulseC 5.1s ease-in-out infinite;
+  }
+
+  @-webkit-keyframes flamePulseA {
+    0%, 100% { -webkit-transform: scale(1) translateY(0); opacity: 0.85; }
+    50%      { -webkit-transform: scale(1.12) translateY(-30px); opacity: 1; }
+  }
+  @-webkit-keyframes flamePulseB {
+    0%, 100% { -webkit-transform: scale(0.95) translateY(0); opacity: 0.7; }
+    50%      { -webkit-transform: scale(1.08) translateY(-22px); opacity: 0.95; }
+  }
+  @-webkit-keyframes flamePulseC {
+    0%, 100% { -webkit-transform: scale(1.05) translateY(0); opacity: 0.75; }
+    50%      { -webkit-transform: scale(0.94) translateY(-26px); opacity: 1; }
+  }
+
+  /* ============ clock layout (skin-independent) ============ */
 
   .stage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: clamp(18px, 3.5vh, 44px);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 682px;
+    margin-left: -341px;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    text-align: center;
+    z-index: 2;
   }
 
-  .board {
-    display: flex;
-    align-items: center;
-    gap: clamp(10px, 1.6vw, 22px);
-  }
+  .board { display: inline-block; }
 
   .colon {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(10px, 2vh, 22px);
-    justify-content: center;
-    padding: 0 clamp(2px, 0.4vw, 6px);
+    float: left;
+    width: 20px;
+    height: 170px;
+    margin: 0 12px;
+    position: relative;
   }
 
   .colon i {
     display: block;
-    width: clamp(7px, 1.1vw, 13px);
-    height: clamp(7px, 1.1vw, 13px);
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
-    background: var(--ink-dim);
-    opacity: 0.55;
+    -webkit-border-radius: 50%;
+    opacity: 0.6;
     font-style: normal;
+    position: absolute;
+    left: 5px;
   }
 
-  .grp {
-    display: flex;
-    gap: clamp(6px, 1vw, 12px);
-  }
+  .colon i.dot-top { top: 68px; }
+  .colon i.dot-bottom { top: 92px; }
 
-  /* --- split-flap digit unit --- */
+  .grp { float: left; }
+  .grp.hidden { display: none; }
+  .colon.hidden { display: none; }
+
+  .grp .flap-unit { float: left; margin-right: 6px; }
+  .grp .flap-unit:last-child { margin-right: 0; }
 
   .flap-unit {
     position: relative;
-    width: clamp(64px, 11vw, 176px);
-    height: clamp(96px, 16.5vw, 264px);
-    border-radius: clamp(6px, 0.7vw, 12px);
-    background: var(--panel-lo);
-    box-shadow:
-      0 clamp(10px, 1.6vw, 28px) clamp(24px, 3.4vw, 60px) rgba(0, 0, 0, 0.55),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    width: 96px;
+    height: 170px;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -webkit-perspective: 600px;
     perspective: 600px;
-    font-family: "Big Shoulders Display", "Arial Narrow", sans-serif;
+    font-family: "Big Shoulders Display", "Arial Narrow", Arial, sans-serif;
     font-weight: 800;
   }
 
@@ -94,196 +152,448 @@
     position: absolute;
     left: 0;
     right: 0;
-    height: 50%;
+    height: 85px;
     overflow: hidden;
-    background: var(--panel);
-    color: var(--ink);
   }
 
   .flap-half span {
     position: absolute;
     left: 0;
     right: 0;
-    height: 200%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(52px, 9.2vw, 148px);
-    line-height: 1;
+    height: 170px;
+    text-align: center;
+    font-size: 98px;
+    line-height: 170px;
   }
 
-  .flap-top {
-    top: 0;
-    border-radius: clamp(6px, 0.7vw, 12px) clamp(6px, 0.7vw, 12px) 0 0;
-  }
+  .flap-top { top: 0; border-radius: 8px 8px 0 0; -webkit-border-radius: 8px 8px 0 0; }
   .flap-top span { top: 0; }
 
-  .flap-bottom {
-    bottom: 0;
-    border-radius: 0 0 clamp(6px, 0.7vw, 12px) clamp(6px, 0.7vw, 12px);
-  }
-  .flap-bottom span { top: -100%; }
+  .flap-bottom { bottom: 0; border-radius: 0 0 8px 8px; -webkit-border-radius: 0 0 8px 8px; }
+  .flap-bottom span { top: -85px; }
 
-  .flap-unit::after {
-    content: "";
+  .flap-unit .seam {
     position: absolute;
     left: 0;
     right: 0;
-    top: 50%;
+    top: 85px;
     height: 2px;
-    transform: translateY(-1px);
-    background: var(--seam);
     z-index: 5;
   }
 
-  /* the two moving leaves: only ever shown while a flip is in progress,
-     so a fragile backface-visibility misrender can never leak into the resting state */
   .leaf {
     position: absolute;
     left: 0;
     right: 0;
-    height: 50%;
+    height: 85px;
     overflow: hidden;
-    background: var(--panel);
-    color: var(--ink);
-    backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     opacity: 0;
     z-index: 4;
   }
 
-  .flap-unit.flipping .leaf {
-    opacity: 1;
-  }
+  .flap-unit.flipping .leaf { opacity: 1; }
 
   .leaf span {
     position: absolute;
     left: 0;
     right: 0;
-    height: 200%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(52px, 9.2vw, 148px);
-    line-height: 1;
+    height: 170px;
+    text-align: center;
+    font-size: 98px;
+    line-height: 170px;
   }
 
   .leaf-front {
     top: 0;
-    border-radius: clamp(6px, 0.7vw, 12px) clamp(6px, 0.7vw, 12px) 0 0;
+    border-radius: 8px 8px 0 0;
+    -webkit-border-radius: 8px 8px 0 0;
+    -webkit-transform-origin: bottom center;
     transform-origin: bottom center;
   }
   .leaf-front span { top: 0; }
 
   .leaf-back {
     bottom: 0;
-    border-radius: 0 0 clamp(6px, 0.7vw, 12px) clamp(6px, 0.7vw, 12px);
+    border-radius: 0 0 8px 8px;
+    -webkit-border-radius: 0 0 8px 8px;
+    -webkit-transform-origin: top center;
     transform-origin: top center;
+    -webkit-transform: rotateX(180deg);
     transform: rotateX(180deg);
   }
-  .leaf-back span { top: -100%; }
-
-  .leaf::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0));
-    pointer-events: none;
-  }
-  .leaf-back::before {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0));
-  }
+  .leaf-back span { top: -85px; }
 
   .flap-unit.flipping .leaf-front {
+    -webkit-animation: flipDown 0.32s cubic-bezier(0.4, 0.0, 1, 1) forwards;
     animation: flipDown 0.32s cubic-bezier(0.4, 0.0, 1, 1) forwards;
   }
   .flap-unit.flipping .leaf-back {
+    -webkit-animation: flipUp 0.32s cubic-bezier(0, 0, 0.2, 1) 0.32s forwards;
     animation: flipUp 0.32s cubic-bezier(0, 0, 0.2, 1) 0.32s forwards;
   }
 
+  @-webkit-keyframes flipDown {
+    from { -webkit-transform: rotateX(0deg); }
+    to   { -webkit-transform: rotateX(-180deg); }
+  }
   @keyframes flipDown {
     from { transform: rotateX(0deg); }
     to   { transform: rotateX(-180deg); }
+  }
+  @-webkit-keyframes flipUp {
+    from { -webkit-transform: rotateX(180deg); }
+    to   { -webkit-transform: rotateX(0deg); }
   }
   @keyframes flipUp {
     from { transform: rotateX(180deg); }
     to   { transform: rotateX(0deg); }
   }
 
-  .meta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: clamp(6px, 1vh, 10px);
-  }
-
   .date {
-    font-size: clamp(13px, 1.7vw, 20px);
+    margin-top: 28px;
+    font-size: 20px;
     font-weight: 600;
-    letter-spacing: 0.16em;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    color: var(--ink-dim);
   }
 
-  .date b {
-    color: var(--accent);
-    font-weight: 600;
-  }
+  /* ============ skin: classic ============ */
+  .skin-classic .flap-unit { background-color: #161514; -webkit-box-shadow: 0 14px 34px rgba(0,0,0,0.55); box-shadow: 0 14px 34px rgba(0,0,0,0.55); }
+  .skin-classic .flap-half { background-color: #201f1e; color: #f0e9da; }
+  .skin-classic .leaf { background-color: #201f1e; color: #f0e9da; }
+  .skin-classic .seam { background-color: #030303; }
+  .skin-classic .colon i { background-color: #a89f8d; }
+  .skin-classic .date { color: #a89f8d; }
 
-  .hint {
-    position: fixed;
+  /* ============ skin: volumetric ============ */
+  .skin-volumetric .flap-unit {
+    background-color: #14181f;
+    -webkit-box-shadow: 0 22px 46px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.04);
+    box-shadow: 0 22px 46px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.04);
+  }
+  .skin-volumetric .flap-half {
+    background-color: #262c38;
+    background: -webkit-linear-gradient(top, #333b4a 0%, #262c38 45%, #1a1e26 100%);
+    color: #fdfdfb;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -10px 18px rgba(0,0,0,0.35);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), inset 0 -10px 18px rgba(0,0,0,0.35);
+  }
+  .skin-volumetric .leaf {
+    background-color: #262c38;
+    background: -webkit-linear-gradient(top, #333b4a 0%, #262c38 45%, #1a1e26 100%);
+    color: #fdfdfb;
+  }
+  .skin-volumetric .seam { background-color: #050608; height: 3px; -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.06); box-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+  .skin-volumetric .colon i { background-color: #7c8aa8; -webkit-box-shadow: 0 0 8px rgba(124,138,168,0.7); box-shadow: 0 0 8px rgba(124,138,168,0.7); }
+  .skin-volumetric .date { color: #8891a0; }
+
+  /* ============ skin: fire ============ */
+  .skin-fire .flap-unit { background-color: #1c130d; -webkit-box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 60px rgba(255,110,30,0.12); box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 60px rgba(255,110,30,0.12); }
+  .skin-fire .flap-half { background-color: #241812; color: #ffd9ad; }
+  .skin-fire .leaf { background-color: #241812; color: #ffd9ad; }
+  .skin-fire .seam { background-color: #0d0704; }
+  .skin-fire .colon i { background-color: #ff9d52; -webkit-box-shadow: 0 0 10px rgba(255,140,50,0.9); box-shadow: 0 0 10px rgba(255,140,50,0.9); }
+  .skin-fire .date { color: #d98a4d; }
+
+  /* ============ skin: neon ============ */
+  .skin-neon .flap-unit {
+    background-color: #0b0b14;
+    -webkit-box-shadow: 0 0 0 1px rgba(70,230,255,0.35), 0 0 26px rgba(70,230,255,0.25), 0 14px 34px rgba(0,0,0,0.6);
+    box-shadow: 0 0 0 1px rgba(70,230,255,0.35), 0 0 26px rgba(70,230,255,0.25), 0 14px 34px rgba(0,0,0,0.6);
+  }
+  .skin-neon .flap-half { background-color: #0f0f1a; color: #6ff2ff; }
+  .skin-neon .leaf { background-color: #0f0f1a; color: #6ff2ff; }
+  .skin-neon .seam { background-color: #ff3fd8; -webkit-box-shadow: 0 0 8px rgba(255,63,216,0.9); box-shadow: 0 0 8px rgba(255,63,216,0.9); }
+  .skin-neon .colon i { background-color: #ff3fd8; -webkit-box-shadow: 0 0 10px rgba(255,63,216,0.9); box-shadow: 0 0 10px rgba(255,63,216,0.9); }
+  .skin-neon .date { color: #ff7fe6; }
+
+  /* ============ settings gear (reopens start screen) ============ */
+
+  .gear {
+    position: absolute;
+    right: 22px;
+    bottom: 22px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    background-color: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.55);
+    font-size: 18px;
+    line-height: 40px;
+    text-align: center;
+    text-decoration: none;
+    z-index: 6;
+    -webkit-transition: opacity 0.4s ease;
+    transition: opacity 0.4s ease;
+  }
+  .gear.hidden { opacity: 0; }
+
+  /* ============ start / settings screen ============ */
+
+  .start-screen {
+    position: absolute;
     left: 0;
+    top: 0;
     right: 0;
-    bottom: clamp(18px, 4vh, 40px);
-    display: flex;
-    justify-content: center;
+    bottom: 0;
+    background-color: #0a0b0d;
+    z-index: 50;
+    -webkit-transition: opacity 0.35s ease;
+    transition: opacity 0.35s ease;
+  }
+  .start-screen.closed {
+    opacity: 0;
     pointer-events: none;
-    transition: opacity 1.1s ease;
   }
 
-  .hint span {
-    font-size: clamp(11px, 1.3vw, 13px);
-    letter-spacing: 0.08em;
-    color: var(--ink-dim);
-    background: rgba(255, 255, 255, 0.045);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0.6em 1.1em;
+  .start-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 420px;
+    margin-left: -210px;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    text-align: center;
+    color: #f0e9da;
+  }
+
+  .start-title {
+    font-family: "Big Shoulders Display", Arial, sans-serif;
+    font-weight: 800;
+    font-size: 40px;
+    letter-spacing: 1px;
+    margin: 0 0 6px 0;
+    color: #f0e9da;
+  }
+
+  .start-sub {
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: #7c766a;
+    margin-bottom: 34px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #7c766a;
+    text-align: left;
+    margin-bottom: 12px;
+  }
+
+  .skin-grid {
+    margin-bottom: 30px;
+  }
+
+  .skin-grid:after { content: ""; display: block; clear: both; }
+
+  .skin-choice {
+    float: left;
+    width: 25%;
+    text-decoration: none;
+    color: #a89f8d;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  .skin-swatch {
+    display: block;
+    width: 62px;
+    height: 62px;
+    margin: 0 auto 8px auto;
+    border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -webkit-box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+  }
+
+  .skin-choice.active .skin-swatch {
+    -webkit-box-shadow: 0 0 0 2px #ffffff;
+    box-shadow: 0 0 0 2px #ffffff;
+  }
+  .skin-choice.active { color: #ffffff; }
+
+  .swatch-classic { background-color: #201f1e; }
+  .swatch-volumetric { background: -webkit-linear-gradient(top, #333b4a 0%, #1a1e26 100%); }
+  .swatch-fire { background: -webkit-linear-gradient(top, #ff8c3c 0%, #24140b 100%); }
+  .swatch-neon { background-color: #0f0f1a; -webkit-box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); }
+  .skin-choice.active .swatch-neon { -webkit-box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); }
+
+  .toggle-row {
+    text-align: left;
+    margin-bottom: 34px;
+    font-size: 15px;
+    color: #d8d2c4;
+  }
+  .toggle-row:after { content: ""; display: block; clear: both; }
+  .toggle-row span.label { float: left; line-height: 30px; }
+
+  .toggle {
+    float: right;
+    display: block;
+    width: 50px;
+    height: 30px;
+    border-radius: 15px;
+    -webkit-border-radius: 15px;
+    background-color: #2a2a2a;
+    position: relative;
+    text-decoration: none;
+  }
+  .toggle-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    background-color: #f0e9da;
+    -webkit-transition: left 0.18s ease;
+    transition: left 0.18s ease;
+  }
+  .toggle.on { background-color: #d98a3d; }
+  .toggle.on .toggle-knob { left: 23px; }
+
+  .start-btn {
+    display: block;
+    padding: 15px 0;
+    background-color: #d98a3d;
+    color: #14100a;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
     border-radius: 999px;
+    -webkit-border-radius: 999px;
   }
 
-  .hint.gone { opacity: 0; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .flap-unit.flipping .leaf-front,
-    .flap-unit.flipping .leaf-back {
-      animation-duration: 0.01ms;
-    }
+  .start-hint {
+    margin-top: 22px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: #5c574c;
   }
 </style>
 
+<div class="flame flame-a"></div>
+<div class="flame flame-b"></div>
+<div class="flame flame-c"></div>
+
 <div class="stage">
   <div class="board" id="board"></div>
-  <div class="meta">
-    <div class="date" id="date">&nbsp;</div>
+  <div class="date" id="date">&nbsp;</div>
+</div>
+
+<a href="#" class="gear hidden" id="gear">&#9881;</a>
+
+<div class="start-screen" id="startScreen">
+  <div class="start-inner">
+    <div class="start-title">Flap Clock</div>
+    <div class="start-sub">Настройка перед запуском</div>
+
+    <div class="field-label">Оформление</div>
+    <div class="skin-grid" id="skinGrid">
+      <a href="#" class="skin-choice" data-skin="classic"><span class="skin-swatch swatch-classic"></span>Классика</a>
+      <a href="#" class="skin-choice" data-skin="volumetric"><span class="skin-swatch swatch-volumetric"></span>Объём</a>
+      <a href="#" class="skin-choice" data-skin="fire"><span class="skin-swatch swatch-fire"></span>Огонь</a>
+      <a href="#" class="skin-choice" data-skin="neon"><span class="skin-swatch swatch-neon"></span>Неон</a>
+    </div>
+
+    <div class="toggle-row">
+      <span class="label">Показывать секунды</span>
+      <a href="#" class="toggle" id="secondsToggle"><span class="toggle-knob"></span></a>
+    </div>
+
+    <a href="#" class="start-btn" id="startBtn">Готово</a>
+    <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
   </div>
 </div>
 
-<div class="hint" id="hint"><span>Поделиться → На экран «Домой» — для полноэкранного режима</span></div>
-
-<!-- silent muted loop keeps iOS from sleeping the display (Wake Lock API is unavailable on old Safari) -->
-<video id="nosleep" muted playsinline loop style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;"
-  src="data:video/mp4;base64,AAAAHGZ0eXBpc29tAAACAGlzb21pc28yYXZjMQAAAAhmcmVlAAAAqW1kYXQAAAAfTGF2YzYwLjMuAADCk3sAAAAAAgD+AAAAAA==">
-</video>
-
 <script>
 (function () {
-  "use strict";
 
   var board = document.getElementById("board");
   var dateEl = document.getElementById("date");
-  var hint = document.getElementById("hint");
+  var startScreen = document.getElementById("startScreen");
+  var skinGrid = document.getElementById("skinGrid");
+  var secondsToggle = document.getElementById("secondsToggle");
+  var startBtn = document.getElementById("startBtn");
+  var gear = document.getElementById("gear");
 
-  var units = {}; // key -> {front, back, top, bottom, value}
+  function pad2(n) {
+    n = "" + n;
+    return n.length < 2 ? "0" + n : n;
+  }
+
+  /* ---------- settings: skin ---------- */
+
+  var SKINS = ["classic", "volumetric", "fire", "neon"];
+
+  function loadSetting(key, fallback) {
+    try {
+      var v = localStorage.getItem(key);
+      return v === null ? fallback : v;
+    } catch (e) { return fallback; }
+  }
+  function saveSetting(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
+
+  function applySkin(name) {
+    document.body.className = "skin-" + name;
+    saveSetting("flapclock-skin", name);
+
+    var choices = skinGrid.getElementsByTagName("a");
+    for (var i = 0; i < choices.length; i++) {
+      var c = choices[i];
+      c.className = "skin-choice" + (c.getAttribute("data-skin") === name ? " active" : "");
+    }
+  }
+
+  skinGrid.addEventListener("click", function (ev) {
+    var t = ev.target;
+    while (t && t !== skinGrid && !t.getAttribute("data-skin")) { t = t.parentNode; }
+    if (t && t.getAttribute("data-skin")) {
+      ev.preventDefault();
+      applySkin(t.getAttribute("data-skin"));
+    }
+  }, false);
+
+  var savedSkin = loadSetting("flapclock-skin", "classic");
+  if (SKINS.indexOf ? SKINS.indexOf(savedSkin) === -1 : true) {
+    var found = false;
+    for (var si = 0; si < SKINS.length; si++) { if (SKINS[si] === savedSkin) { found = true; } }
+    if (!found) { savedSkin = "classic"; }
+  }
+  applySkin(savedSkin);
+
+  /* ---------- settings: seconds ---------- */
+
+  var showSeconds = loadSetting("flapclock-seconds", "0") === "1";
+
+  function applySecondsToggleUI() {
+    secondsToggle.className = "toggle" + (showSeconds ? " on" : "");
+  }
+
+  secondsToggle.addEventListener("click", function (ev) {
+    ev.preventDefault();
+    showSeconds = !showSeconds;
+    saveSetting("flapclock-seconds", showSeconds ? "1" : "0");
+    applySecondsToggleUI();
+    updateSecondsVisibility();
+  }, false);
+
+  applySecondsToggleUI();
+
+  /* ---------- clock ---------- */
+
+  var units = {}; // key -> {front, back, top, bottom, value, el}
 
   function makeGroup(count, prefix) {
     var grp = document.createElement("div");
@@ -291,7 +601,7 @@
     for (var i = 0; i < count; i++) {
       grp.appendChild(makeUnit(prefix + i));
     }
-    board.appendChild(grp);
+    return grp;
   }
 
   function makeUnit(key) {
@@ -301,31 +611,35 @@
     var top = document.createElement("div");
     top.className = "flap-half flap-top";
     var topSpan = document.createElement("span");
-    topSpan.textContent = "0";
+    topSpan.appendChild(document.createTextNode("0"));
     top.appendChild(topSpan);
 
     var bottom = document.createElement("div");
     bottom.className = "flap-half flap-bottom";
     var bottomSpan = document.createElement("span");
-    bottomSpan.textContent = "0";
+    bottomSpan.appendChild(document.createTextNode("0"));
     bottom.appendChild(bottomSpan);
 
     var leafFront = document.createElement("div");
     leafFront.className = "leaf leaf-front";
     var frontSpan = document.createElement("span");
-    frontSpan.textContent = "0";
+    frontSpan.appendChild(document.createTextNode("0"));
     leafFront.appendChild(frontSpan);
 
     var leafBack = document.createElement("div");
     leafBack.className = "leaf leaf-back";
     var backSpan = document.createElement("span");
-    backSpan.textContent = "0";
+    backSpan.appendChild(document.createTextNode("0"));
     leafBack.appendChild(backSpan);
+
+    var seam = document.createElement("div");
+    seam.className = "seam";
 
     unit.appendChild(top);
     unit.appendChild(bottom);
     unit.appendChild(leafFront);
     unit.appendChild(leafBack);
+    unit.appendChild(seam);
 
     units[key] = {
       el: unit, top: topSpan, bottom: bottomSpan,
@@ -334,38 +648,61 @@
     return unit;
   }
 
-  makeGroup(2, "h"); // hours
-  var colon = document.createElement("div");
-  colon.className = "colon";
-  colon.innerHTML = "<i></i><i></i>";
-  board.appendChild(colon);
-  makeGroup(2, "m"); // minutes
+  function makeColon() {
+    var colon = document.createElement("div");
+    colon.className = "colon";
+    var dotTop = document.createElement("i");
+    dotTop.className = "dot-top";
+    var dotBottom = document.createElement("i");
+    dotBottom.className = "dot-bottom";
+    colon.appendChild(dotTop);
+    colon.appendChild(dotBottom);
+    return colon;
+  }
+
+  function setText(span, value) {
+    span.removeChild(span.firstChild);
+    span.appendChild(document.createTextNode(value));
+  }
+
+  board.appendChild(makeGroup(2, "h"));
+  board.appendChild(makeColon());
+  board.appendChild(makeGroup(2, "m"));
+  var colon2 = makeColon();
+  board.appendChild(colon2);
+  var secGroup = makeGroup(2, "s");
+  board.appendChild(secGroup);
+
+  function updateSecondsVisibility() {
+    colon2.className = "colon" + (showSeconds ? "" : " hidden");
+    secGroup.className = "grp" + (showSeconds ? "" : " hidden");
+  }
+  updateSecondsVisibility();
 
   function setDigit(key, value, animated) {
     var u = units[key];
-    if (u.value === value) return;
+    if (u.value === value) { return; }
 
     if (!animated) {
-      u.top.textContent = value;
-      u.bottom.textContent = value;
+      setText(u.top, value);
+      setText(u.bottom, value);
       u.value = value;
       return;
     }
 
-    u.front.textContent = u.value;
-    u.back.textContent = value;
+    setText(u.front, u.value);
+    setText(u.back, value);
 
-    u.el.classList.remove("flipping");
-    void u.el.offsetWidth; // restart animation
-    u.el.classList.add("flipping");
+    u.el.className = "flap-unit";
+    u.el.offsetWidth; // restart animation
+    u.el.className = "flap-unit flipping";
 
-    var doneAfter = 660;
     setTimeout(function () {
-      u.top.textContent = value;
-      u.bottom.textContent = value;
-      u.el.classList.remove("flipping");
+      setText(u.top, value);
+      setText(u.bottom, value);
+      u.el.className = "flap-unit";
       u.value = value;
-    }, doneAfter);
+    }, 660);
   }
 
   var months = ["января", "февраля", "марта", "апреля",
@@ -379,14 +716,17 @@
 
   function tick() {
     var now = new Date();
-    var hh = String(now.getHours()).padStart(2, "0");
-    var mm = String(now.getMinutes()).padStart(2, "0");
+    var hh = pad2(now.getHours());
+    var mm = pad2(now.getMinutes());
+    var ss = pad2(now.getSeconds());
     var animated = !firstTick;
 
-    setDigit("h0", hh[0], animated);
-    setDigit("h1", hh[1], animated);
-    setDigit("m0", mm[0], animated);
-    setDigit("m1", mm[1], animated);
+    setDigit("h0", hh.charAt(0), animated);
+    setDigit("h1", hh.charAt(1), animated);
+    setDigit("m0", mm.charAt(0), animated);
+    setDigit("m1", mm.charAt(1), animated);
+    setDigit("s0", ss.charAt(0), animated);
+    setDigit("s1", ss.charAt(1), animated);
 
     firstTick = false;
 
@@ -400,25 +740,47 @@
   tick();
   setInterval(tick, 1000);
 
-  // keep the iPad screen awake: loop a near-invisible silent video (Wake Lock API
-  // does not exist in Safari on iOS 9), and re-request fullscreen after any tap.
-  var nosleep = document.getElementById("nosleep");
-  function primeNoSleep() {
-    nosleep.play().catch(function () {});
-    var docEl = document.documentElement;
-    if (docEl.requestFullscreen) docEl.requestFullscreen().catch(function () {});
-    else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
-    hint.classList.add("gone");
-    window.removeEventListener("touchend", primeNoSleep);
-    window.removeEventListener("click", primeNoSleep);
+  /* ---------- start screen open/close ---------- */
+
+  var gearTimer = null;
+
+  function showGear() {
+    gear.className = "gear";
+    clearTimeout(gearTimer);
+    gearTimer = setTimeout(function () { gear.className = "gear hidden"; }, 5000);
   }
-  window.addEventListener("touchend", primeNoSleep);
-  window.addEventListener("click", primeNoSleep);
 
-  setTimeout(function () { hint.classList.add("gone"); }, 12000);
+  function closeStart() {
+    startScreen.className = "start-screen closed";
+    showGear();
+  }
 
-  document.addEventListener("visibilitychange", function () {
-    if (!document.hidden) nosleep.play().catch(function () {});
-  });
+  function openStart() {
+    startScreen.className = "start-screen";
+    gear.className = "gear hidden";
+    clearTimeout(gearTimer);
+  }
+
+  startBtn.addEventListener("click", function (ev) {
+    ev.preventDefault();
+    closeStart();
+  }, false);
+
+  gear.addEventListener("click", function (ev) {
+    ev.preventDefault();
+    openStart();
+  }, false);
+
+  document.addEventListener("touchend", function (ev) {
+    if (startScreen.className.indexOf("closed") === -1) { return; }
+    if (gear.contains && gear.contains(ev.target)) { return; }
+    showGear();
+  }, false);
+  document.addEventListener("click", function (ev) {
+    if (startScreen.className.indexOf("closed") === -1) { return; }
+    if (gear === ev.target) { return; }
+    showGear();
+  }, false);
+
 })();
 </script>
