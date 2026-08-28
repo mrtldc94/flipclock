@@ -421,6 +421,8 @@
   .swatch-neon { background-color: #0f0f1a; -webkit-box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); }
   .skin-choice.active .swatch-neon { -webkit-box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); }
 
+  .field-group.hidden { display: none; }
+
   .color-grid {
     margin-bottom: 30px;
     text-align: center;
@@ -525,16 +527,18 @@
       <a href="#" class="skin-choice" data-skin="neon"><span class="skin-swatch swatch-neon"></span>Неон</a>
     </div>
 
-    <div class="field-label">Цвет свечения</div>
-    <div class="color-grid" id="colorGrid">
-      <a href="#" class="color-choice" data-color="amber"><span class="color-swatch" style="background-color:#ff8c28"></span></a>
-      <a href="#" class="color-choice" data-color="red"><span class="color-swatch" style="background-color:#ff3c32"></span></a>
-      <a href="#" class="color-choice" data-color="blue"><span class="color-swatch" style="background-color:#468cff"></span></a>
-      <a href="#" class="color-choice" data-color="green"><span class="color-swatch" style="background-color:#46c878"></span></a>
-      <a href="#" class="color-choice" data-color="purple"><span class="color-swatch" style="background-color:#aa5aff"></span></a>
-      <a href="#" class="color-choice" data-color="pink"><span class="color-swatch" style="background-color:#ff5aaa"></span></a>
-      <a href="#" class="color-choice" data-color="cyan"><span class="color-swatch" style="background-color:#46dce6"></span></a>
-      <a href="#" class="color-choice" data-color="white"><span class="color-swatch" style="background-color:#ffffff"></span></a>
+    <div class="field-group" id="colorSection">
+      <div class="field-label">Цвет акцента</div>
+      <div class="color-grid" id="colorGrid">
+        <a href="#" class="color-choice" data-color="amber"><span class="color-swatch" style="background-color:#ff8c28"></span></a>
+        <a href="#" class="color-choice" data-color="red"><span class="color-swatch" style="background-color:#ff3c32"></span></a>
+        <a href="#" class="color-choice" data-color="blue"><span class="color-swatch" style="background-color:#468cff"></span></a>
+        <a href="#" class="color-choice" data-color="green"><span class="color-swatch" style="background-color:#46c878"></span></a>
+        <a href="#" class="color-choice" data-color="purple"><span class="color-swatch" style="background-color:#aa5aff"></span></a>
+        <a href="#" class="color-choice" data-color="pink"><span class="color-swatch" style="background-color:#ff5aaa"></span></a>
+        <a href="#" class="color-choice" data-color="cyan"><span class="color-swatch" style="background-color:#46dce6"></span></a>
+        <a href="#" class="color-choice" data-color="white"><span class="color-swatch" style="background-color:#ffffff"></span></a>
+      </div>
     </div>
 
     <div class="toggle-row">
@@ -577,6 +581,8 @@
     try { localStorage.setItem(key, value); } catch (e) {}
   }
 
+  var COLOR_SKINS = { fire: true, neon: true }; // skins whose color can be customized
+
   function applySkin(name) {
     document.body.className = "skin-" + name;
     saveSetting("flapclock-skin", name);
@@ -586,6 +592,9 @@
       var c = choices[i];
       c.className = "skin-choice" + (c.getAttribute("data-skin") === name ? " active" : "");
     }
+
+    updateColorSectionVisibility();
+    applyAccentColor(currentColorKey);
   }
 
   skinGrid.addEventListener("click", function (ev) {
@@ -597,17 +606,9 @@
     }
   }, false);
 
-  var savedSkin = loadSetting("flapclock-skin", "classic");
-  if (SKINS.indexOf ? SKINS.indexOf(savedSkin) === -1 : true) {
-    var found = false;
-    for (var si = 0; si < SKINS.length; si++) { if (SKINS[si] === savedSkin) { found = true; } }
-    if (!found) { savedSkin = "classic"; }
-  }
-  applySkin(savedSkin);
+  /* ---------- settings: accent color (glow + neon skins only) ---------- */
 
-  /* ---------- settings: glow color ---------- */
-
-  var GLOW_COLORS = {
+  var ACCENT_COLORS = {
     amber:  { r: 255, g: 140, b: 40 },
     red:    { r: 255, g: 60,  b: 50 },
     blue:   { r: 70,  g: 140, b: 255 },
@@ -617,12 +618,13 @@
     cyan:   { r: 70,  g: 220, b: 230 },
     white:  { r: 255, g: 255, b: 255 }
   };
-  var GLOW_SWATCH_HEX = {
+  var ACCENT_SWATCH_HEX = {
     amber: "#ff8c28", red: "#ff3c32", blue: "#468cff", green: "#46c878",
     purple: "#aa5aff", pink: "#ff5aaa", cyan: "#46dce6", white: "#ffffff"
   };
   var GLOW_OPACITY = [0.55, 0.4, 0.4]; // matches the original glow-a/b/c intensities
 
+  var colorSection = document.getElementById("colorSection");
   var colorGrid = document.getElementById("colorGrid");
   var swatchGlow = document.getElementById("swatchGlow");
   var glowEls = [
@@ -631,21 +633,71 @@
     document.querySelector(".glow-c")
   ];
 
-  function applyGlowColor(key) {
-    var c = GLOW_COLORS[key] || GLOW_COLORS.amber;
+  function mix(component, towardWhite) {
+    return Math.round(component + (255 - component) * towardWhite);
+  }
+
+  function updateColorSectionVisibility() {
+    colorSection.className = "field-group" + (COLOR_SKINS[document.body.className.replace("skin-", "")] ? "" : " hidden");
+  }
+
+  function applyAccentColor(key) {
+    var c = ACCENT_COLORS[key] || ACCENT_COLORS.amber;
+    currentColorKey = key;
+
     for (var i = 0; i < glowEls.length; i++) {
       var op = GLOW_OPACITY[i];
       var rgba1 = "rgba(" + c.r + "," + c.g + "," + c.b + "," + op + ")";
       var rgba0 = "rgba(" + c.r + "," + c.g + "," + c.b + ",0)";
       glowEls[i].style.background = "-webkit-radial-gradient(50% 50%, ellipse farthest-side, " + rgba1 + " 0%, " + rgba0 + " 70%)";
     }
-    if (swatchGlow) { swatchGlow.style.background = GLOW_SWATCH_HEX[key] || GLOW_SWATCH_HEX.amber; }
+    if (swatchGlow) { swatchGlow.style.background = ACCENT_SWATCH_HEX[key] || ACCENT_SWATCH_HEX.amber; }
     saveSetting("flapclock-glow-color", key);
 
     var choices = colorGrid.getElementsByTagName("a");
     for (var j = 0; j < choices.length; j++) {
       var ch = choices[j];
       ch.className = "color-choice" + (ch.getAttribute("data-color") === key ? " active" : "");
+    }
+
+    var skinName = document.body.className.replace("skin-", "");
+    var customizable = !!COLOR_SKINS[skinName];
+
+    var inkColor = "rgb(" + mix(c.r, 0.78) + "," + mix(c.g, 0.78) + "," + mix(c.b, 0.78) + ")";
+    var dimColor = "rgba(" + c.r + "," + c.g + "," + c.b + ",0.9)";
+    var solidColor = "rgb(" + c.r + "," + c.g + "," + c.b + ")";
+    var boxShadow;
+    if (skinName === "neon") {
+      boxShadow = "0 0 0 1px rgba(" + c.r + "," + c.g + "," + c.b + ",0.4), " +
+                  "0 0 26px rgba(" + c.r + "," + c.g + "," + c.b + ",0.3), " +
+                  "0 14px 34px rgba(0,0,0,0.6)";
+    } else {
+      boxShadow = "0 16px 40px rgba(0,0,0,0.6), 0 0 60px rgba(" + c.r + "," + c.g + "," + c.b + ",0.16)";
+    }
+    var dotShadow = "0 0 10px rgba(" + c.r + "," + c.g + "," + c.b + ",0.9)";
+
+    var i2, list;
+
+    list = document.querySelectorAll(".flap-half, .leaf");
+    for (i2 = 0; i2 < list.length; i2++) { list[i2].style.color = customizable ? inkColor : ""; }
+
+    list = document.querySelectorAll(".date");
+    for (i2 = 0; i2 < list.length; i2++) { list[i2].style.color = customizable ? dimColor : ""; }
+
+    list = document.querySelectorAll(".seam");
+    for (i2 = 0; i2 < list.length; i2++) { list[i2].style.backgroundColor = customizable ? solidColor : ""; }
+
+    list = document.querySelectorAll(".colon i");
+    for (i2 = 0; i2 < list.length; i2++) {
+      list[i2].style.backgroundColor = customizable ? solidColor : "";
+      list[i2].style.boxShadow = customizable ? dotShadow : "";
+      list[i2].style.webkitBoxShadow = customizable ? dotShadow : "";
+    }
+
+    list = document.querySelectorAll(".flap-unit");
+    for (i2 = 0; i2 < list.length; i2++) {
+      list[i2].style.boxShadow = customizable ? boxShadow : "";
+      list[i2].style.webkitBoxShadow = customizable ? boxShadow : "";
     }
   }
 
@@ -654,11 +706,19 @@
     while (t && t !== colorGrid && !t.getAttribute("data-color")) { t = t.parentNode; }
     if (t && t.getAttribute("data-color")) {
       ev.preventDefault();
-      applyGlowColor(t.getAttribute("data-color"));
+      applyAccentColor(t.getAttribute("data-color"));
     }
   }, false);
 
-  applyGlowColor(loadSetting("flapclock-glow-color", "amber"));
+  var currentColorKey = loadSetting("flapclock-glow-color", "amber");
+
+  var savedSkin = loadSetting("flapclock-skin", "classic");
+  if (SKINS.indexOf ? SKINS.indexOf(savedSkin) === -1 : true) {
+    var found = false;
+    for (var si = 0; si < SKINS.length; si++) { if (SKINS[si] === savedSkin) { found = true; } }
+    if (!found) { savedSkin = "classic"; }
+  }
+  applySkin(savedSkin);
 
   /* ---------- settings: seconds ---------- */
 
