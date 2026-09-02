@@ -217,37 +217,42 @@
     -webkit-border-radius: 0 0 8px 8px;
     -webkit-transform-origin: top center;
     transform-origin: top center;
-    -webkit-transform: rotateX(180deg);
-    transform: rotateX(180deg);
+    -webkit-transform: rotateX(90deg);
+    transform: rotateX(90deg);
   }
   .leaf-back span { top: -85px; }
 
-  /* linear timing so the leaf crosses edge-on (invisible) at exactly the
-     midpoint of each half -- the JS swaps the static digit at that same
-     instant, see setDigit()'s topTimer/bottomTimer */
+  /* Each leaf is only ever visible for a QUARTER turn (past that it is
+     edge-on and backface-visibility hides it), so each animates only that
+     visible quarter -- not the full half-turn -- for its whole duration.
+     leaf-front plays 0-160ms (0deg -> -90deg, ending edge-on exactly as it
+     disappears); leaf-back starts right where that ends, at 160ms, already
+     edge-on (90deg) and plays 160-320ms (90deg -> 0deg) into full view.
+     Back-to-back, with no dead gap -- see setDigit()'s topTimer/bottomTimer,
+     which swap each static half's text at that same 160ms / 320ms instant. */
   .flap-unit.flipping .leaf-front {
-    -webkit-animation: flipDown 0.32s linear forwards;
-    animation: flipDown 0.32s linear forwards;
+    -webkit-animation: flipDown 0.16s linear forwards;
+    animation: flipDown 0.16s linear forwards;
   }
   .flap-unit.flipping .leaf-back {
-    -webkit-animation: flipUp 0.32s linear 0.32s forwards;
-    animation: flipUp 0.32s linear 0.32s forwards;
+    -webkit-animation: flipUp 0.16s linear 0.16s forwards;
+    animation: flipUp 0.16s linear 0.16s forwards;
   }
 
   @-webkit-keyframes flipDown {
     from { -webkit-transform: rotateX(0deg); }
-    to   { -webkit-transform: rotateX(-180deg); }
+    to   { -webkit-transform: rotateX(-90deg); }
   }
   @keyframes flipDown {
     from { transform: rotateX(0deg); }
-    to   { transform: rotateX(-180deg); }
+    to   { transform: rotateX(-90deg); }
   }
   @-webkit-keyframes flipUp {
-    from { -webkit-transform: rotateX(180deg); }
+    from { -webkit-transform: rotateX(90deg); }
     to   { -webkit-transform: rotateX(0deg); }
   }
   @keyframes flipUp {
-    from { transform: rotateX(180deg); }
+    from { transform: rotateX(90deg); }
     to   { transform: rotateX(0deg); }
   }
 
@@ -851,14 +856,11 @@
     u.el.offsetWidth; // restart animation
     u.el.className = "flap-unit flipping";
 
-    /* The moving leaf is a rigid card rotating on a hinge: it is only visible
-       (front or back face) for the first quarter-turn on each side, then
-       edge-on and invisible for the rest. leaf-front (0.32s, 0deg->-180deg,
-       linear) crosses edge-on at its 50% mark = 160ms; leaf-back (0.32s,
-       180deg->0deg, linear, starts at 320ms) crosses edge-on at ITS 50% mark
-       = 320+160 = 480ms. Swap each static half's text at exactly that
-       instant so the reveal underneath is seamless -- this is what makes it
-       read as one continuous top-to-bottom flip instead of a stuck top half. */
+    /* leaf-front plays its whole 160ms visible quarter-turn (0deg->-90deg),
+       then leaf-back immediately continues with its own 160ms visible
+       quarter-turn (90deg->0deg) -- back to back, no dead gap. Swap each
+       static half's text right as its leaf finishes covering it, so the
+       reveal underneath is seamless. */
     u.topTimer = setTimeout(function () {
       setText(u.top, value);
       u.topTimer = null;
@@ -867,13 +869,13 @@
     u.bottomTimer = setTimeout(function () {
       setText(u.bottom, value);
       u.bottomTimer = null;
-    }, 480);
+    }, 320);
 
     u.endTimer = setTimeout(function () {
       u.el.className = "flap-unit";
       u.value = value;
       u.endTimer = null;
-    }, 660);
+    }, 340);
   }
 
   var months = ["января", "февраля", "марта", "апреля",
