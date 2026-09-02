@@ -143,6 +143,11 @@
     perspective: 600px;
     font-family: "Big Shoulders Display", "Arial Narrow", Arial, sans-serif;
     font-weight: 800;
+    /* promote to its own compositor layer so its (often blurred) box-shadow
+       isn't re-rasterized on the CPU every frame while the leaf inside it
+       animates -- this is the main source of jank on older iOS Safari */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   .flap-half {
@@ -208,6 +213,8 @@
     -webkit-border-radius: 8px 8px 0 0;
     -webkit-transform-origin: bottom center;
     transform-origin: bottom center;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
   .leaf-front span { top: 0; }
 
@@ -217,8 +224,8 @@
     -webkit-border-radius: 0 0 8px 8px;
     -webkit-transform-origin: top center;
     transform-origin: top center;
-    -webkit-transform: rotateX(90deg);
-    transform: rotateX(90deg);
+    -webkit-transform: translateZ(0) rotateX(90deg);
+    transform: translateZ(0) rotateX(90deg);
   }
   .leaf-back span { top: -85px; }
 
