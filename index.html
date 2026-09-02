@@ -41,6 +41,29 @@
     background: -webkit-radial-gradient(50% 60%, ellipse farthest-side, #100a1c 0%, #05050a 72%);
   }
 
+  body.skin-fireplace { background-color: #000000; }
+
+  /* ============ fireplace skin: real looped flame footage ============ */
+
+  .fireplace-bg {
+    display: none;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    pointer-events: none;
+  }
+  body.skin-fireplace .fireplace-bg { display: block; }
+
+  .skin-fireplace .flap-unit { background-color: #1c130d; -webkit-box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(255,120,40,0.14); box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(255,120,40,0.14); }
+  .skin-fireplace .flap-half { background-color: #241812; color: #ffd9ad; }
+  .skin-fireplace .leaf { background-color: #241812; color: #ffd9ad; }
+  .skin-fireplace .seam { background-color: #0d0704; }
+  .skin-fireplace .colon i { background-color: #ff9d52; -webkit-box-shadow: 0 0 10px rgba(255,140,50,0.9); box-shadow: 0 0 10px rgba(255,140,50,0.9); }
+  .skin-fireplace .date { color: #d98a4d; }
+
   /* ============ glow skin: ambient bloom (color set via JS, see applyGlowColor) ============ */
 
   .glow {
@@ -421,6 +444,7 @@
   .swatch-fire { background: -webkit-linear-gradient(top, #ff8c3c 0%, #24140b 100%); }
   .swatch-neon { background-color: #0f0f1a; -webkit-box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); }
   .skin-choice.active .swatch-neon { -webkit-box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); }
+  .swatch-fireplace { background-color: #000000; background: -webkit-radial-gradient(50% 90%, ellipse farthest-side, #ff8c3c 0%, #7a2e0a 45%, #000000 85%); }
 
   .field-group.hidden { display: none; }
 
@@ -508,6 +532,8 @@
 <div class="glow glow-b"></div>
 <div class="glow glow-c"></div>
 
+<img class="fireplace-bg" src="fire.gif" alt="">
+
 <div class="stage">
   <div class="board" id="board"></div>
   <div class="date" id="date">&nbsp;</div>
@@ -525,6 +551,7 @@
       <a href="#" class="skin-choice" data-skin="volumetric"><span class="skin-swatch swatch-volumetric"></span>Классика</a>
       <a href="#" class="skin-choice" data-skin="fire"><span class="skin-swatch swatch-fire" id="swatchGlow"></span>Свечение</a>
       <a href="#" class="skin-choice" data-skin="neon"><span class="skin-swatch swatch-neon"></span>Неон</a>
+      <a href="#" class="skin-choice" data-skin="fireplace"><span class="skin-swatch swatch-fireplace"></span>Камин</a>
     </div>
 
     <div class="field-group" id="colorSection">
@@ -593,7 +620,7 @@
 
   /* ---------- settings: skin ---------- */
 
-  var SKINS = ["volumetric", "fire", "neon"];
+  var SKINS = ["volumetric", "fire", "neon", "fireplace"];
 
   function loadSetting(key, fallback) {
     try {
