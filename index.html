@@ -29,11 +29,6 @@
 
   /* ============ skin: base backgrounds ============ */
 
-  body.skin-classic {
-    background-color: #0a0b0d;
-    background: -webkit-radial-gradient(50% 42%, ellipse farthest-side, #191510 0%, #0a0b0d 68%);
-  }
-
   body.skin-volumetric {
     background-color: #06070a;
     background: -webkit-radial-gradient(50% 38%, ellipse farthest-side, #12161f 0%, #06070a 70%);
@@ -271,15 +266,7 @@
     text-transform: uppercase;
   }
 
-  /* ============ skin: classic ============ */
-  .skin-classic .flap-unit { background-color: #161514; -webkit-box-shadow: 0 14px 34px rgba(0,0,0,0.55); box-shadow: 0 14px 34px rgba(0,0,0,0.55); }
-  .skin-classic .flap-half { background-color: #201f1e; color: #f0e9da; }
-  .skin-classic .leaf { background-color: #201f1e; color: #f0e9da; }
-  .skin-classic .seam { background-color: #030303; }
-  .skin-classic .colon i { background-color: #a89f8d; }
-  .skin-classic .date { color: #a89f8d; }
-
-  /* ============ skin: volumetric ============ */
+  /* ============ skin: volumetric (labeled "Классика" in the UI) ============ */
   .skin-volumetric .flap-unit {
     background-color: #14181f;
     -webkit-box-shadow: 0 22px 46px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.04);
@@ -430,7 +417,6 @@
   }
   .skin-choice.active { color: #ffffff; }
 
-  .swatch-classic { background-color: #201f1e; }
   .swatch-volumetric { background: -webkit-linear-gradient(top, #333b4a 0%, #1a1e26 100%); }
   .swatch-fire { background: -webkit-linear-gradient(top, #ff8c3c 0%, #24140b 100%); }
   .swatch-neon { background-color: #0f0f1a; -webkit-box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); }
@@ -536,8 +522,7 @@
 
     <div class="field-label">Оформление</div>
     <div class="skin-grid" id="skinGrid">
-      <a href="#" class="skin-choice" data-skin="classic"><span class="skin-swatch swatch-classic"></span>Классика</a>
-      <a href="#" class="skin-choice" data-skin="volumetric"><span class="skin-swatch swatch-volumetric"></span>Объём</a>
+      <a href="#" class="skin-choice" data-skin="volumetric"><span class="skin-swatch swatch-volumetric"></span>Классика</a>
       <a href="#" class="skin-choice" data-skin="fire"><span class="skin-swatch swatch-fire" id="swatchGlow"></span>Свечение</a>
       <a href="#" class="skin-choice" data-skin="neon"><span class="skin-swatch swatch-neon"></span>Неон</a>
     </div>
@@ -608,7 +593,7 @@
 
   /* ---------- settings: skin ---------- */
 
-  var SKINS = ["classic", "volumetric", "fire", "neon"];
+  var SKINS = ["volumetric", "fire", "neon"];
 
   function loadSetting(key, fallback) {
     try {
@@ -621,7 +606,7 @@
   }
 
   var ACCENT_SKINS = { fire: true, neon: true };      // skins whose accent color can be customized
-  var CARD_SKINS = { classic: true, volumetric: true }; // skins whose card color + background can be customized
+  var CARD_SKINS = { volumetric: true }; // skins whose card color + background can be customized
 
   function applySkin(name) {
     document.body.className = "skin-" + name;
@@ -755,14 +740,9 @@
 
   var currentColorKey = loadSetting("flapclock-glow-color", "amber");
 
-  /* ---------- settings: card color (classic + volumetric only) ---------- */
+  /* ---------- settings: card color (volumetric/"Классика" only) ---------- */
 
   var CARD_PALETTES = {
-    classic: {
-      black: { unitBg: "#161514", panelBg: "#201f1e", ink: "#f0e9da", dim: "#a89f8d", seam: "#030303", shadow: "0 14px 34px rgba(0,0,0,0.55)" },
-      white: { unitBg: "#e7e2d5", panelBg: "#faf7f0", ink: "#211d16", dim: "#7c7566", seam: "#cfc8b8", shadow: "0 14px 30px rgba(0,0,0,0.18)" },
-      wine:  { unitBg: "#300b13", panelBg: "#4a1420", ink: "#f5e6dd", dim: "#caa190", seam: "#180208", shadow: "0 14px 34px rgba(0,0,0,0.55)" }
-    },
     volumetric: {
       black: { unitBg: "#14181f", panelBg: "-webkit-linear-gradient(top, #333b4a 0%, #262c38 45%, #1a1e26 100%)", ink: "#fdfdfb", dim: "#8891a0", seam: "#050608", shadow: "0 22px 46px rgba(0,0,0,0.65)" },
       white: { unitBg: "#e4e0d5", panelBg: "-webkit-linear-gradient(top, #ffffff 0%, #f2efe8 45%, #ded8c9 100%)", ink: "#211d16", dim: "#7c7566", seam: "#c9c3b3", shadow: "0 18px 36px rgba(0,0,0,0.18)" },
@@ -829,7 +809,7 @@
 
   var currentCardColorKey = loadSetting("flapclock-card-color", "black");
 
-  /* ---------- settings: background (classic + volumetric only) ---------- */
+  /* ---------- settings: background (volumetric/"Классика" only) ---------- */
 
   var BACKGROUNDS = {
     light:    { color: "#f4f1ea", gradient: "-webkit-radial-gradient(50% 35%, ellipse farthest-side, #ffffff 0%, #eee8d9 72%)" },
@@ -873,11 +853,11 @@
 
   var currentBgKey = loadSetting("flapclock-bg", "dark");
 
-  var savedSkin = loadSetting("flapclock-skin", "classic");
+  var savedSkin = loadSetting("flapclock-skin", "volumetric");
   if (SKINS.indexOf ? SKINS.indexOf(savedSkin) === -1 : true) {
     var found = false;
     for (var si = 0; si < SKINS.length; si++) { if (SKINS[si] === savedSkin) { found = true; } }
-    if (!found) { savedSkin = "classic"; }
+    if (!found) { savedSkin = "volumetric"; }
   }
   applySkin(savedSkin);
 
