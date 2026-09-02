@@ -222,13 +222,16 @@
   }
   .leaf-back span { top: -85px; }
 
+  /* linear timing so the leaf crosses edge-on (invisible) at exactly the
+     midpoint of each half -- the JS swaps the static digit at that same
+     instant, see setDigit()'s topTimer/bottomTimer */
   .flap-unit.flipping .leaf-front {
-    -webkit-animation: flipDown 0.32s cubic-bezier(0.4, 0.0, 1, 1) forwards;
-    animation: flipDown 0.32s cubic-bezier(0.4, 0.0, 1, 1) forwards;
+    -webkit-animation: flipDown 0.32s linear forwards;
+    animation: flipDown 0.32s linear forwards;
   }
   .flap-unit.flipping .leaf-back {
-    -webkit-animation: flipUp 0.32s cubic-bezier(0, 0, 0.2, 1) 0.32s forwards;
-    animation: flipUp 0.32s cubic-bezier(0, 0, 0.2, 1) 0.32s forwards;
+    -webkit-animation: flipUp 0.32s linear 0.32s forwards;
+    animation: flipUp 0.32s linear 0.32s forwards;
   }
 
   @-webkit-keyframes flipDown {
@@ -830,7 +833,8 @@
     var u = units[key];
     if (u.value === value) { return; }
 
-    if (u.midTimer) { clearTimeout(u.midTimer); u.midTimer = null; }
+    if (u.topTimer) { clearTimeout(u.topTimer); u.topTimer = null; }
+    if (u.bottomTimer) { clearTimeout(u.bottomTimer); u.bottomTimer = null; }
     if (u.endTimer) { clearTimeout(u.endTimer); u.endTimer = null; }
 
     if (!animated) {
@@ -847,14 +851,23 @@
     u.el.offsetWidth; // restart animation
     u.el.className = "flap-unit flipping";
 
-    /* swap the static top/bottom text to the new value at the animation's
-       midpoint (when the moving leaf is edge-on and invisible), so the
-       static layer never sits frozen on the old digit under the leaf */
-    u.midTimer = setTimeout(function () {
+    /* The moving leaf is a rigid card rotating on a hinge: it is only visible
+       (front or back face) for the first quarter-turn on each side, then
+       edge-on and invisible for the rest. leaf-front (0.32s, 0deg->-180deg,
+       linear) crosses edge-on at its 50% mark = 160ms; leaf-back (0.32s,
+       180deg->0deg, linear, starts at 320ms) crosses edge-on at ITS 50% mark
+       = 320+160 = 480ms. Swap each static half's text at exactly that
+       instant so the reveal underneath is seamless -- this is what makes it
+       read as one continuous top-to-bottom flip instead of a stuck top half. */
+    u.topTimer = setTimeout(function () {
       setText(u.top, value);
+      u.topTimer = null;
+    }, 160);
+
+    u.bottomTimer = setTimeout(function () {
       setText(u.bottom, value);
-      u.midTimer = null;
-    }, 320);
+      u.bottomTimer = null;
+    }, 480);
 
     u.endTimer = setTimeout(function () {
       u.el.className = "flap-unit";
