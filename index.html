@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<title>Flap Clock</title>
+<title>XBB Flap Clock</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Archivo:ital,wght@0,500;0,600;1,500&display=swap');
 
@@ -531,7 +531,7 @@
 
 <div class="start-screen" id="startScreen">
   <div class="start-inner">
-    <div class="start-title">Flap Clock</div>
+    <div class="start-title">XBB Flap Clock</div>
     <div class="start-sub">Настройка перед запуском</div>
 
     <div class="field-label">Оформление</div>
@@ -556,9 +556,32 @@
       </div>
     </div>
 
+    <div class="field-group" id="cardColorSection">
+      <div class="field-label">Цвет часов</div>
+      <div class="color-grid" id="cardColorGrid">
+        <a href="#" class="color-choice" data-card-color="black"><span class="color-swatch" style="background-color:#201f1e"></span></a>
+        <a href="#" class="color-choice" data-card-color="white"><span class="color-swatch" style="background-color:#faf7f0"></span></a>
+        <a href="#" class="color-choice" data-card-color="wine"><span class="color-swatch" style="background-color:#4a1420"></span></a>
+      </div>
+    </div>
+
+    <div class="field-group" id="bgSection">
+      <div class="field-label">Фон</div>
+      <div class="color-grid" id="bgGrid">
+        <a href="#" class="color-choice" data-bg="dark"><span class="color-swatch" style="background-color:#121419"></span></a>
+        <a href="#" class="color-choice" data-bg="light"><span class="color-swatch" style="background-color:#f4f1ea"></span></a>
+        <a href="#" class="color-choice" data-bg="midnight"><span class="color-swatch" style="background-color:#0c1230"></span></a>
+      </div>
+    </div>
+
     <div class="toggle-row">
       <span class="label">Показывать секунды</span>
       <a href="#" class="toggle" id="secondsToggle"><span class="toggle-knob"></span></a>
+    </div>
+
+    <div class="toggle-row">
+      <span class="label">Менять скин каждые сутки</span>
+      <a href="#" class="toggle" id="rotateToggle"><span class="toggle-knob"></span></a>
     </div>
 
     <a href="#" class="start-btn" id="startBtn">Готово</a>
@@ -574,6 +597,7 @@
   var startScreen = document.getElementById("startScreen");
   var skinGrid = document.getElementById("skinGrid");
   var secondsToggle = document.getElementById("secondsToggle");
+  var rotateToggle = document.getElementById("rotateToggle");
   var startBtn = document.getElementById("startBtn");
   var gear = document.getElementById("gear");
 
@@ -596,7 +620,8 @@
     try { localStorage.setItem(key, value); } catch (e) {}
   }
 
-  var COLOR_SKINS = { fire: true, neon: true }; // skins whose color can be customized
+  var ACCENT_SKINS = { fire: true, neon: true };      // skins whose accent color can be customized
+  var CARD_SKINS = { classic: true, volumetric: true }; // skins whose card color + background can be customized
 
   function applySkin(name) {
     document.body.className = "skin-" + name;
@@ -610,6 +635,9 @@
 
     updateColorSectionVisibility();
     applyAccentColor(currentColorKey);
+    updateCardSectionVisibility();
+    applyCardColor(currentCardColorKey);
+    applyBackground(currentBgKey);
   }
 
   skinGrid.addEventListener("click", function (ev) {
@@ -653,7 +681,7 @@
   }
 
   function updateColorSectionVisibility() {
-    colorSection.className = "field-group" + (COLOR_SKINS[document.body.className.replace("skin-", "")] ? "" : " hidden");
+    colorSection.className = "field-group" + (ACCENT_SKINS[document.body.className.replace("skin-", "")] ? "" : " hidden");
   }
 
   function applyAccentColor(key) {
@@ -676,7 +704,7 @@
     }
 
     var skinName = document.body.className.replace("skin-", "");
-    var customizable = !!COLOR_SKINS[skinName];
+    var customizable = !!ACCENT_SKINS[skinName];
 
     var inkColor = "rgb(" + mix(c.r, 0.78) + "," + mix(c.g, 0.78) + "," + mix(c.b, 0.78) + ")";
     var dimColor = "rgba(" + c.r + "," + c.g + "," + c.b + ",0.9)";
@@ -727,6 +755,124 @@
 
   var currentColorKey = loadSetting("flapclock-glow-color", "amber");
 
+  /* ---------- settings: card color (classic + volumetric only) ---------- */
+
+  var CARD_PALETTES = {
+    classic: {
+      black: { unitBg: "#161514", panelBg: "#201f1e", ink: "#f0e9da", dim: "#a89f8d", seam: "#030303", shadow: "0 14px 34px rgba(0,0,0,0.55)" },
+      white: { unitBg: "#e7e2d5", panelBg: "#faf7f0", ink: "#211d16", dim: "#7c7566", seam: "#cfc8b8", shadow: "0 14px 30px rgba(0,0,0,0.18)" },
+      wine:  { unitBg: "#300b13", panelBg: "#4a1420", ink: "#f5e6dd", dim: "#caa190", seam: "#180208", shadow: "0 14px 34px rgba(0,0,0,0.55)" }
+    },
+    volumetric: {
+      black: { unitBg: "#14181f", panelBg: "-webkit-linear-gradient(top, #333b4a 0%, #262c38 45%, #1a1e26 100%)", ink: "#fdfdfb", dim: "#8891a0", seam: "#050608", shadow: "0 22px 46px rgba(0,0,0,0.65)" },
+      white: { unitBg: "#e4e0d5", panelBg: "-webkit-linear-gradient(top, #ffffff 0%, #f2efe8 45%, #ded8c9 100%)", ink: "#211d16", dim: "#7c7566", seam: "#c9c3b3", shadow: "0 18px 36px rgba(0,0,0,0.18)" },
+      wine:  { unitBg: "#3a0f18", panelBg: "-webkit-linear-gradient(top, #7a2438 0%, #4a1420 45%, #2c0a12 100%)", ink: "#f6e6df", dim: "#c99e8f", seam: "#160208", shadow: "0 22px 46px rgba(0,0,0,0.65)" }
+    }
+  };
+
+  var cardColorSection = document.getElementById("cardColorSection");
+  var cardColorGrid = document.getElementById("cardColorGrid");
+
+  function updateCardSectionVisibility() {
+    var on = !!CARD_SKINS[document.body.className.replace("skin-", "")];
+    cardColorSection.className = "field-group" + (on ? "" : " hidden");
+    bgSection.className = "field-group" + (on ? "" : " hidden");
+  }
+
+  function applyCardColor(key) {
+    currentCardColorKey = key;
+    saveSetting("flapclock-card-color", key);
+
+    var choices = cardColorGrid.getElementsByTagName("a");
+    for (var j = 0; j < choices.length; j++) {
+      var ch = choices[j];
+      ch.className = "color-choice" + (ch.getAttribute("data-card-color") === key ? " active" : "");
+    }
+
+    var skinName = document.body.className.replace("skin-", "");
+    var customizable = !!CARD_SKINS[skinName];
+    var pal = customizable ? (CARD_PALETTES[skinName][key] || CARD_PALETTES[skinName].black) : null;
+
+    var i2, list;
+
+    list = document.querySelectorAll(".flap-unit");
+    for (i2 = 0; i2 < list.length; i2++) {
+      list[i2].style.backgroundColor = customizable ? pal.unitBg : "";
+      list[i2].style.boxShadow = customizable ? pal.shadow : "";
+      list[i2].style.webkitBoxShadow = customizable ? pal.shadow : "";
+    }
+
+    list = document.querySelectorAll(".flap-half, .leaf");
+    for (i2 = 0; i2 < list.length; i2++) {
+      list[i2].style.background = customizable ? pal.panelBg : "";
+      list[i2].style.color = customizable ? pal.ink : "";
+    }
+
+    list = document.querySelectorAll(".date");
+    for (i2 = 0; i2 < list.length; i2++) { list[i2].style.color = customizable ? pal.dim : ""; }
+
+    list = document.querySelectorAll(".seam");
+    for (i2 = 0; i2 < list.length; i2++) { list[i2].style.backgroundColor = customizable ? pal.seam : ""; }
+
+    list = document.querySelectorAll(".colon i");
+    for (i2 = 0; i2 < list.length; i2++) { list[i2].style.backgroundColor = customizable ? pal.dim : ""; }
+  }
+
+  cardColorGrid.addEventListener("click", function (ev) {
+    var t = ev.target;
+    while (t && t !== cardColorGrid && !t.getAttribute("data-card-color")) { t = t.parentNode; }
+    if (t && t.getAttribute("data-card-color")) {
+      ev.preventDefault();
+      applyCardColor(t.getAttribute("data-card-color"));
+    }
+  }, false);
+
+  var currentCardColorKey = loadSetting("flapclock-card-color", "black");
+
+  /* ---------- settings: background (classic + volumetric only) ---------- */
+
+  var BACKGROUNDS = {
+    light:    { color: "#f4f1ea", gradient: "-webkit-radial-gradient(50% 35%, ellipse farthest-side, #ffffff 0%, #eee8d9 72%)" },
+    midnight: { color: "#05060f", gradient: "-webkit-radial-gradient(50% 40%, ellipse farthest-side, #141a34 0%, #05060f 70%)" }
+  };
+
+  var bgSection = document.getElementById("bgSection");
+  var bgGrid = document.getElementById("bgGrid");
+
+  function applyBackground(key) {
+    currentBgKey = key;
+    saveSetting("flapclock-bg", key);
+
+    var choices = bgGrid.getElementsByTagName("a");
+    for (var j = 0; j < choices.length; j++) {
+      var ch = choices[j];
+      ch.className = "color-choice" + (ch.getAttribute("data-bg") === key ? " active" : "");
+    }
+
+    var skinName = document.body.className.replace("skin-", "");
+    var customizable = !!CARD_SKINS[skinName] && key !== "dark";
+
+    if (!customizable) {
+      document.body.style.backgroundColor = "";
+      document.body.style.background = "";
+    } else {
+      var bg = BACKGROUNDS[key] || BACKGROUNDS.light;
+      document.body.style.backgroundColor = bg.color;
+      document.body.style.background = bg.gradient;
+    }
+  }
+
+  bgGrid.addEventListener("click", function (ev) {
+    var t = ev.target;
+    while (t && t !== bgGrid && !t.getAttribute("data-bg")) { t = t.parentNode; }
+    if (t && t.getAttribute("data-bg")) {
+      ev.preventDefault();
+      applyBackground(t.getAttribute("data-bg"));
+    }
+  }, false);
+
+  var currentBgKey = loadSetting("flapclock-bg", "dark");
+
   var savedSkin = loadSetting("flapclock-skin", "classic");
   if (SKINS.indexOf ? SKINS.indexOf(savedSkin) === -1 : true) {
     var found = false;
@@ -752,6 +898,40 @@
   }, false);
 
   applySecondsToggleUI();
+
+  /* ---------- settings: daily skin rotation ---------- */
+
+  var rotateEnabled = loadSetting("flapclock-rotate", "0") === "1";
+  var lastRotationDay = null;
+
+  function applyRotateToggleUI() {
+    rotateToggle.className = "toggle" + (rotateEnabled ? " on" : "");
+  }
+
+  function dayIndex(date) {
+    var localMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    return Math.floor(localMidnight.getTime() / 86400000);
+  }
+
+  function checkRotation(force) {
+    if (!rotateEnabled) { return; }
+    var idx = dayIndex(new Date());
+    if (force || idx !== lastRotationDay) {
+      lastRotationDay = idx;
+      applySkin(SKINS[((idx % SKINS.length) + SKINS.length) % SKINS.length]);
+    }
+  }
+
+  rotateToggle.addEventListener("click", function (ev) {
+    ev.preventDefault();
+    rotateEnabled = !rotateEnabled;
+    saveSetting("flapclock-rotate", rotateEnabled ? "1" : "0");
+    applyRotateToggleUI();
+    if (rotateEnabled) { checkRotation(true); }
+  }, false);
+
+  applyRotateToggleUI();
+  checkRotation(true);
 
   /* ---------- clock ---------- */
 
@@ -915,6 +1095,8 @@
       var text = weekdays[now.getDay()] + ", " + now.getDate() + " " + months[now.getMonth()];
       dateEl.innerHTML = text.charAt(0).toUpperCase() + text.slice(1);
     }
+
+    checkRotation(false);
   }
 
   tick();
