@@ -69,6 +69,29 @@
   .skin-fireplace .colon i { background-color: #ff9d52; -webkit-box-shadow: 0 0 10px rgba(255,140,50,0.9); box-shadow: 0 0 10px rgba(255,140,50,0.9); }
   .skin-fireplace .date { color: #000000; }
 
+  body.skin-ocean { background-color: #000000; }
+
+  /* ============ ocean skin: real looped underwater bubble footage ============ */
+
+  .ocean-bg {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  body.skin-ocean .ocean-bg { display: block; }
+
+  .skin-ocean .flap-unit { background-color: #0b1420; -webkit-box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(90,160,255,0.14); box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(90,160,255,0.14); }
+  .skin-ocean .flap-half { background-color: #16233a; color: #dff0ff; }
+  .skin-ocean .leaf { background-color: #16233a; color: #dff0ff; }
+  .skin-ocean .seam { background-color: #050a12; }
+  .skin-ocean .colon i { background-color: #6bb6ff; -webkit-box-shadow: 0 0 10px rgba(107,182,255,0.9); box-shadow: 0 0 10px rgba(107,182,255,0.9); }
+  .skin-ocean .date { color: #000000; }
+
   /* ============ glow skin: ambient bloom (color set via JS, see applyGlowColor) ============ */
 
   .glow {
@@ -421,7 +444,7 @@
 
   .skin-choice {
     float: left;
-    width: 25%;
+    width: 20%;
     text-decoration: none;
     color: #a89f8d;
     font-size: 11px;
@@ -450,6 +473,7 @@
   .swatch-neon { background-color: #0f0f1a; -webkit-box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); }
   .skin-choice.active .swatch-neon { -webkit-box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); }
   .swatch-fireplace { background-color: #000000; background: -webkit-radial-gradient(50% 90%, ellipse farthest-side, #ff8c3c 0%, #7a2e0a 45%, #000000 85%); }
+  .swatch-ocean { background-color: #000000; background: -webkit-radial-gradient(50% 90%, ellipse farthest-side, #6bb6ff 0%, #123a6e 45%, #000000 85%); }
 
   .field-group.hidden { display: none; }
 
@@ -545,6 +569,7 @@
 <div class="glow glow-c"></div>
 
 <img class="fireplace-bg" src="fire.gif" alt="">
+<img class="ocean-bg" src="ocean.gif" alt="">
 
 <div class="stage">
   <div class="board" id="board"></div>
@@ -564,6 +589,7 @@
       <a href="#" class="skin-choice" data-skin="fire"><span class="skin-swatch swatch-fire" id="swatchGlow"></span>Свечение</a>
       <a href="#" class="skin-choice" data-skin="neon"><span class="skin-swatch swatch-neon"></span>Неон</a>
       <a href="#" class="skin-choice" data-skin="fireplace"><span class="skin-swatch swatch-fireplace"></span>Камин</a>
+      <a href="#" class="skin-choice" data-skin="ocean"><span class="skin-swatch swatch-ocean"></span>Океан</a>
     </div>
 
     <div class="field-group" id="colorSection">
@@ -610,7 +636,7 @@
 
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v4</div>
+    <div class="version-tag">v5</div>
   </div>
 </div>
 
@@ -633,7 +659,7 @@
 
   /* ---------- settings: skin ---------- */
 
-  var SKINS = ["volumetric", "fire", "neon", "fireplace"];
+  var SKINS = ["volumetric", "fire", "neon", "fireplace", "ocean"];
 
   function loadSetting(key, fallback) {
     try {
