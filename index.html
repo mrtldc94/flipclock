@@ -617,7 +617,7 @@
     <div class="field-label">Оформление</div>
     <div class="skin-grid" id="skinGrid">
       <a href="#" class="skin-choice" data-skin="volumetric"><span class="skin-swatch swatch-volumetric"></span>Классика</a>
-      <a href="#" class="skin-choice" data-skin="fire"><span class="skin-swatch swatch-fire" id="swatchGlow"></span>Свечение</a>
+      <a href="#" class="skin-choice" data-skin="fire"><span class="skin-swatch swatch-fire"></span>Свечение</a>
       <a href="#" class="skin-choice" data-skin="neon"><span class="skin-swatch swatch-neon"></span>Неон</a>
       <a href="#" class="skin-choice" data-skin="fireplace"><span class="skin-swatch swatch-fireplace"></span>Камин</a>
       <a href="#" class="skin-choice" data-skin="ocean"><span class="skin-swatch swatch-ocean"></span>Океан</a>
@@ -670,7 +670,7 @@
   <div class="start-footer">
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v11</div>
+    <div class="version-tag">v12</div>
   </div>
 </div>
 
@@ -761,15 +761,10 @@
     cyan:   { r: 70,  g: 220, b: 230 },
     white:  { r: 255, g: 255, b: 255 }
   };
-  var ACCENT_SWATCH_HEX = {
-    amber: "#ff8c28", red: "#ff3c32", blue: "#468cff", green: "#46c878",
-    purple: "#aa5aff", pink: "#ff5aaa", cyan: "#46dce6", white: "#ffffff"
-  };
   var GLOW_OPACITY = [0.55, 0.4, 0.4]; // matches the original glow-a/b/c intensities
 
   var colorSection = document.getElementById("colorSection");
   var colorGrid = document.getElementById("colorGrid");
-  var swatchGlow = document.getElementById("swatchGlow");
   var glowEls = [
     document.querySelector(".glow-a"),
     document.querySelector(".glow-b"),
@@ -794,7 +789,6 @@
       var rgba0 = "rgba(" + c.r + "," + c.g + "," + c.b + ",0)";
       glowEls[i].style.background = "-webkit-radial-gradient(50% 50%, ellipse farthest-side, " + rgba1 + " 0%, " + rgba0 + " 70%)";
     }
-    if (swatchGlow) { swatchGlow.style.background = ACCENT_SWATCH_HEX[key] || ACCENT_SWATCH_HEX.amber; }
     saveSetting("flapclock-glow-color", key);
 
     var choices = colorGrid.getElementsByTagName("a");
