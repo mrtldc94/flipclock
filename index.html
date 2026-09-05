@@ -798,7 +798,7 @@
   <div class="start-footer">
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v17</div>
+    <div class="version-tag">v18</div>
   </div>
 </div>
 
@@ -853,10 +853,10 @@
     }
   }
 
-  function applySkin(name) {
+  function applySkin(name, deferBgLoad) {
     document.body.className = "skin-" + name;
     saveSetting("flapclock-skin", name);
-    loadSkinBackground(name);
+    if (!deferBgLoad) { loadSkinBackground(name); }
 
     var choices = skinGrid.getElementsByTagName("a");
     for (var i = 0; i < choices.length; i++) {
@@ -1097,7 +1097,7 @@
     for (var si = 0; si < SKINS.length; si++) { if (SKINS[si] === savedSkin) { found = true; } }
     if (!found) { savedSkin = "volumetric"; }
   }
-  applySkin(savedSkin);
+  applySkin(savedSkin, true);
 
   /* ---------- settings: seconds ---------- */
 
@@ -1333,6 +1333,7 @@
   function closeStart() {
     startScreen.className = "start-screen closed";
     showGear();
+    loadSkinBackground(document.body.className.replace("skin-", ""));
   }
 
   function openStart() {
