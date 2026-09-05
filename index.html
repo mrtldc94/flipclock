@@ -504,7 +504,10 @@
   .swatch-fireplace { background-color: #000000; background: -webkit-radial-gradient(50% 90%, ellipse farthest-side, #ff8c3c 0%, #7a2e0a 45%, #000000 85%); }
   .swatch-ocean { background-color: #000000; background: -webkit-radial-gradient(50% 90%, ellipse farthest-side, #6bb6ff 0%, #123a6e 45%, #000000 85%); }
 
-  .field-group.hidden { display: none; }
+  /* visibility (not display:none) so the section keeps reserving its layout
+     space even when inactive -- otherwise switching skins changes the
+     panel's total content height and everything shifts position */
+  .field-group.hidden { visibility: hidden; }
 
   .color-grid {
     margin-bottom: 30px;
@@ -669,7 +672,7 @@
   <div class="start-footer">
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v9</div>
+    <div class="version-tag">v10</div>
   </div>
 </div>
 
