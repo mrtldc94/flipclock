@@ -592,6 +592,30 @@
     letter-spacing: 1px;
     color: #3c382f;
   }
+
+  /* ============ compact layout for short viewports (landscape) ============
+     shrinks spacing/sizes so the whole settings panel fits without
+     scrolling, instead of growing a scrollbar down the side */
+  @media (max-height: 900px) {
+    .start-inner { top: 14px; bottom: 66px; }
+    .start-footer { bottom: 12px; }
+    .start-title { font-size: 24px; margin-bottom: 2px; }
+    .start-sub { font-size: 11px; margin-bottom: 12px; }
+    .field-label { margin-bottom: 6px; }
+    .skin-grid { margin-bottom: 12px; }
+    .skin-swatch { width: 42px; height: 42px; margin-bottom: 4px; }
+    .color-grid { margin-bottom: 12px; }
+    .color-choice { margin: 0 4px 4px 4px; }
+    .color-swatch { width: 22px; height: 22px; }
+    .toggle-row { margin-bottom: 10px; font-size: 13px; }
+    .toggle-row span.label { line-height: 24px; }
+    .toggle { width: 40px; height: 24px; border-radius: 12px; }
+    .toggle-knob { width: 18px; height: 18px; }
+    .toggle.on .toggle-knob { left: 19px; }
+    .start-btn { padding: 10px 0; font-size: 13px; }
+    .start-hint { margin-top: 8px; font-size: 10px; }
+    .version-tag { margin-top: 4px; }
+  }
 </style>
 
 <div class="glow glow-a"></div>
@@ -670,7 +694,7 @@
   <div class="start-footer">
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v12</div>
+    <div class="version-tag">v13</div>
   </div>
 </div>
 
