@@ -568,8 +568,8 @@
 <div class="glow glow-b"></div>
 <div class="glow glow-c"></div>
 
-<img class="fireplace-bg" src="fire.gif" alt="">
-<img class="ocean-bg" src="ocean.gif" alt="">
+<img class="fireplace-bg" data-src="fire.gif" alt="">
+<img class="ocean-bg" data-src="ocean.gif" alt="">
 
 <div class="stage">
   <div class="board" id="board"></div>
@@ -636,7 +636,7 @@
 
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v6</div>
+    <div class="version-tag">v7</div>
   </div>
 </div>
 
@@ -674,9 +674,24 @@
   var ACCENT_SKINS = { fire: true, neon: true };      // skins whose accent color can be customized
   var CARD_SKINS = { volumetric: true }; // skins whose card color + background can be customized
 
+  /* the fireplace/ocean backgrounds are multi-MB looped GIFs -- only fetch
+     one once its skin is actually selected, not on every page load */
+  var BG_IMAGES = {
+    fireplace: document.querySelector(".fireplace-bg"),
+    ocean: document.querySelector(".ocean-bg")
+  };
+
+  function loadSkinBackground(name) {
+    var img = BG_IMAGES[name];
+    if (img && !img.src) {
+      img.src = img.getAttribute("data-src");
+    }
+  }
+
   function applySkin(name) {
     document.body.className = "skin-" + name;
     saveSetting("flapclock-skin", name);
+    loadSkinBackground(name);
 
     var choices = skinGrid.getElementsByTagName("a");
     for (var i = 0; i < choices.length; i++) {
