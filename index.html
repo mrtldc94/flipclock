@@ -113,6 +113,52 @@
   .skin-jellyfish .colon i { background-color: #b09dff; -webkit-box-shadow: 0 0 10px rgba(176,157,255,0.9); box-shadow: 0 0 10px rgba(176,157,255,0.9); }
   .skin-jellyfish .date { color: #000000; }
 
+  body.skin-tokyo { background-color: #000000; }
+
+  /* ============ tokyo skin: real looped night traffic footage ============ */
+
+  .tokyo-bg {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  body.skin-tokyo .tokyo-bg { display: block; }
+
+  .skin-tokyo .flap-unit { background-color: #16161c; -webkit-box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(255,180,80,0.14); box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(255,180,80,0.14); }
+  .skin-tokyo .flap-half { background-color: #201f28; color: #f0e6d8; }
+  .skin-tokyo .leaf { background-color: #201f28; color: #f0e6d8; }
+  .skin-tokyo .seam { background-color: #08080c; }
+  .skin-tokyo .colon i { background-color: #ffb84d; -webkit-box-shadow: 0 0 10px rgba(255,184,77,0.9); box-shadow: 0 0 10px rgba(255,184,77,0.9); }
+  .skin-tokyo .date { color: #000000; }
+
+  body.skin-moon { background-color: #000000; }
+
+  /* ============ moon skin: real looped moonlit ocean footage ============ */
+
+  .moon-bg {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  body.skin-moon .moon-bg { display: block; }
+
+  .skin-moon .flap-unit { background-color: #11141c; -webkit-box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(180,200,255,0.14); box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(180,200,255,0.14); }
+  .skin-moon .flap-half { background-color: #1c2030; color: #eef2ff; }
+  .skin-moon .leaf { background-color: #1c2030; color: #eef2ff; }
+  .skin-moon .seam { background-color: #070810; }
+  .skin-moon .colon i { background-color: #cfe0ff; -webkit-box-shadow: 0 0 10px rgba(207,224,255,0.9); box-shadow: 0 0 10px rgba(207,224,255,0.9); }
+  .skin-moon .date { color: #000000; }
+
   /* ============ glow skin: ambient bloom (color set via JS, see applyGlowColor) ============ */
 
   .glow {
@@ -361,10 +407,22 @@
   .skin-volumetric .date { color: #8891a0; }
 
   /* ============ skin: fire ============ */
-  .skin-fire .flap-unit { background-color: #1c130d; -webkit-box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 60px rgba(255,110,30,0.12); box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 60px rgba(255,110,30,0.12); }
-  .skin-fire .flap-half { background-color: #241812; color: #ffd9ad; }
-  .skin-fire .leaf { background-color: #241812; color: #ffd9ad; }
-  .skin-fire .seam { background-color: #0d0704; }
+  .skin-fire .flap-unit {
+    background-color: #000000;
+    -webkit-box-shadow: 0 22px 46px rgba(0,0,0,0.75), 0 0 60px rgba(255,110,30,0.14), inset 0 0 0 1px rgba(255,255,255,0.03);
+    box-shadow: 0 22px 46px rgba(0,0,0,0.75), 0 0 60px rgba(255,110,30,0.14), inset 0 0 0 1px rgba(255,255,255,0.03);
+  }
+  .skin-fire .flap-half {
+    background: #060606 -webkit-linear-gradient(top, #2c2c2c 0%, #101010 45%, #000000 100%);
+    color: #ffd9ad;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -10px 18px rgba(0,0,0,0.55);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -10px 18px rgba(0,0,0,0.55);
+  }
+  .skin-fire .leaf {
+    background: #060606 -webkit-linear-gradient(top, #2c2c2c 0%, #101010 45%, #000000 100%);
+    color: #ffd9ad;
+  }
+  .skin-fire .seam { background-color: #000000; -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.05); box-shadow: 0 1px 0 rgba(255,255,255,0.05); }
   .skin-fire .colon i { background-color: #ff9d52; -webkit-box-shadow: 0 0 10px rgba(255,140,50,0.9); box-shadow: 0 0 10px rgba(255,140,50,0.9); }
   .skin-fire .date { color: #d98a4d; }
 
@@ -494,17 +552,18 @@
 
   .skin-choice {
     float: left;
-    width: 16.666%;
+    width: 25%;
     text-decoration: none;
     color: #a89f8d;
     font-size: 10px;
     letter-spacing: 0.5px;
+    margin-bottom: 14px;
   }
 
   .skin-swatch {
     display: block;
-    width: 54px;
-    height: 54px;
+    width: 58px;
+    height: 58px;
     margin: 0 auto 8px auto;
     border-radius: 12px;
     -webkit-border-radius: 12px;
@@ -525,6 +584,8 @@
   .swatch-fireplace { background-color: #000000; background-image: url(swatch-fireplace.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
   .swatch-ocean { background-color: #000000; background-image: url(swatch-ocean.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
   .swatch-jellyfish { background-color: #000000; background-image: url(swatch-jellyfish.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
+  .swatch-tokyo { background-color: #000000; background-image: url(swatch-tokyo.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
+  .swatch-moon { background-color: #000000; background-image: url(swatch-moon.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
 
   /* visibility (not display:none) so the section keeps reserving its layout
      space even when inactive -- otherwise switching skins changes the
@@ -627,6 +688,7 @@
     .start-sub { font-size: 11px; margin-bottom: 12px; }
     .field-label { margin-bottom: 6px; }
     .skin-grid { margin-bottom: 12px; }
+    .skin-choice { margin-bottom: 8px; }
     .skin-swatch { width: 42px; height: 42px; margin-bottom: 4px; }
     .color-grid { margin-bottom: 12px; }
     .color-choice { margin: 0 4px 4px 4px; }
@@ -649,6 +711,8 @@
 <img class="fireplace-bg" data-src="fire.gif" alt="">
 <img class="ocean-bg" data-src="ocean.gif" alt="">
 <img class="jellyfish-bg" data-src="jellyfish.gif" alt="">
+<img class="tokyo-bg" data-src="tokyo.gif" alt="">
+<img class="moon-bg" data-src="moon.gif" alt="">
 
 <div class="stage">
   <div class="board" id="board"></div>
@@ -671,6 +735,8 @@
       <a href="#" class="skin-choice" data-skin="fireplace"><span class="skin-swatch swatch-fireplace"></span>Камин</a>
       <a href="#" class="skin-choice" data-skin="ocean"><span class="skin-swatch swatch-ocean"></span>Океан</a>
       <a href="#" class="skin-choice" data-skin="jellyfish"><span class="skin-swatch swatch-jellyfish"></span>Медузы</a>
+      <a href="#" class="skin-choice" data-skin="tokyo"><span class="skin-swatch swatch-tokyo"></span>Токио</a>
+      <a href="#" class="skin-choice" data-skin="moon"><span class="skin-swatch swatch-moon"></span>Луна</a>
     </div>
 
     <div class="field-group" id="colorSection">
@@ -720,7 +786,7 @@
   <div class="start-footer">
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v15</div>
+    <div class="version-tag">v16</div>
   </div>
 </div>
 
@@ -743,7 +809,7 @@
 
   /* ---------- settings: skin ---------- */
 
-  var SKINS = ["volumetric", "fire", "neon", "fireplace", "ocean", "jellyfish"];
+  var SKINS = ["volumetric", "fire", "neon", "fireplace", "ocean", "jellyfish", "tokyo", "moon"];
 
   function loadSetting(key, fallback) {
     try {
@@ -763,7 +829,9 @@
   var BG_IMAGES = {
     fireplace: document.querySelector(".fireplace-bg"),
     ocean: document.querySelector(".ocean-bg"),
-    jellyfish: document.querySelector(".jellyfish-bg")
+    jellyfish: document.querySelector(".jellyfish-bg"),
+    tokyo: document.querySelector(".tokyo-bg"),
+    moon: document.querySelector(".moon-bg")
   };
 
   function loadSkinBackground(name) {
