@@ -35,15 +35,13 @@
   /* ============ skin: base backgrounds ============ */
 
   body.skin-volumetric {
-    background-color: #06070a;
-    background: -webkit-radial-gradient(50% 38%, ellipse farthest-side, #12161f 0%, #06070a 70%);
+    background: #06070a -webkit-radial-gradient(50% 38%, ellipse farthest-side, #12161f 0%, #06070a 70%);
   }
 
   body.skin-fire { background-color: #0c0503; }
 
   body.skin-neon {
-    background-color: #05050a;
-    background: -webkit-radial-gradient(50% 60%, ellipse farthest-side, #100a1c 0%, #05050a 72%);
+    background: #05050a -webkit-radial-gradient(50% 60%, ellipse farthest-side, #100a1c 0%, #05050a 72%);
   }
 
   body.skin-fireplace { background-color: #000000; }
@@ -498,11 +496,11 @@
   .skin-choice.active { color: #ffffff; }
 
   .swatch-volumetric { background: -webkit-linear-gradient(top, #333b4a 0%, #1a1e26 100%); }
-  .swatch-fire { background: -webkit-linear-gradient(top, #ff8c3c 0%, #24140b 100%); }
+  .swatch-fire { background: #000000 -webkit-radial-gradient(50% 90%, ellipse farthest-side, #ff8c3c 0%, #7a2e0a 45%, #000000 85%); }
   .swatch-neon { background-color: #0f0f1a; -webkit-box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); box-shadow: 0 0 0 2px #6ff2ff, 0 0 14px rgba(111,242,255,0.6); }
   .skin-choice.active .swatch-neon { -webkit-box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); }
-  .swatch-fireplace { background-color: #000000; background: -webkit-radial-gradient(50% 90%, ellipse farthest-side, #ff8c3c 0%, #7a2e0a 45%, #000000 85%); }
-  .swatch-ocean { background-color: #000000; background: -webkit-radial-gradient(50% 90%, ellipse farthest-side, #6bb6ff 0%, #123a6e 45%, #000000 85%); }
+  .swatch-fireplace { background-color: #000000; background-image: url(swatch-fireplace.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
+  .swatch-ocean { background-color: #000000; background-image: url(swatch-ocean.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
 
   /* visibility (not display:none) so the section keeps reserving its layout
      space even when inactive -- otherwise switching skins changes the
@@ -672,7 +670,7 @@
   <div class="start-footer">
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v10</div>
+    <div class="version-tag">v11</div>
   </div>
 </div>
 
@@ -950,12 +948,10 @@
     var customizable = !!CARD_SKINS[skinName] && key !== "dark";
 
     if (!customizable) {
-      document.body.style.backgroundColor = "";
       document.body.style.background = "";
     } else {
       var bg = BACKGROUNDS[key] || BACKGROUNDS.light;
-      document.body.style.backgroundColor = bg.color;
-      document.body.style.background = bg.gradient;
+      document.body.style.background = bg.color + " " + bg.gradient;
     }
   }
 
