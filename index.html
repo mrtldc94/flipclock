@@ -90,6 +90,29 @@
   .skin-ocean .colon i { background-color: #6bb6ff; -webkit-box-shadow: 0 0 10px rgba(107,182,255,0.9); box-shadow: 0 0 10px rgba(107,182,255,0.9); }
   .skin-ocean .date { color: #000000; }
 
+  body.skin-jellyfish { background-color: #000000; }
+
+  /* ============ jellyfish skin: real looped aquarium footage ============ */
+
+  .jellyfish-bg {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+  body.skin-jellyfish .jellyfish-bg { display: block; }
+
+  .skin-jellyfish .flap-unit { background-color: #14122c; -webkit-box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(140,120,255,0.14); box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 50px rgba(140,120,255,0.14); }
+  .skin-jellyfish .flap-half { background-color: #201c40; color: #eae6ff; }
+  .skin-jellyfish .leaf { background-color: #201c40; color: #eae6ff; }
+  .skin-jellyfish .seam { background-color: #09081a; }
+  .skin-jellyfish .colon i { background-color: #b09dff; -webkit-box-shadow: 0 0 10px rgba(176,157,255,0.9); box-shadow: 0 0 10px rgba(176,157,255,0.9); }
+  .skin-jellyfish .date { color: #000000; }
+
   /* ============ glow skin: ambient bloom (color set via JS, see applyGlowColor) ============ */
 
   .glow {
@@ -471,17 +494,17 @@
 
   .skin-choice {
     float: left;
-    width: 20%;
+    width: 16.666%;
     text-decoration: none;
     color: #a89f8d;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 0.5px;
   }
 
   .skin-swatch {
     display: block;
-    width: 62px;
-    height: 62px;
+    width: 54px;
+    height: 54px;
     margin: 0 auto 8px auto;
     border-radius: 12px;
     -webkit-border-radius: 12px;
@@ -501,6 +524,7 @@
   .skin-choice.active .swatch-neon { -webkit-box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); box-shadow: 0 0 0 2px #ff3fd8, 0 0 14px rgba(255,63,216,0.7); }
   .swatch-fireplace { background-color: #000000; background-image: url(swatch-fireplace.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
   .swatch-ocean { background-color: #000000; background-image: url(swatch-ocean.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
+  .swatch-jellyfish { background-color: #000000; background-image: url(swatch-jellyfish.jpg); -webkit-background-size: cover; background-size: cover; background-position: center; }
 
   /* visibility (not display:none) so the section keeps reserving its layout
      space even when inactive -- otherwise switching skins changes the
@@ -624,6 +648,7 @@
 
 <img class="fireplace-bg" data-src="fire.gif" alt="">
 <img class="ocean-bg" data-src="ocean.gif" alt="">
+<img class="jellyfish-bg" data-src="jellyfish.gif" alt="">
 
 <div class="stage">
   <div class="board" id="board"></div>
@@ -645,6 +670,7 @@
       <a href="#" class="skin-choice" data-skin="neon"><span class="skin-swatch swatch-neon"></span>Неон</a>
       <a href="#" class="skin-choice" data-skin="fireplace"><span class="skin-swatch swatch-fireplace"></span>Камин</a>
       <a href="#" class="skin-choice" data-skin="ocean"><span class="skin-swatch swatch-ocean"></span>Океан</a>
+      <a href="#" class="skin-choice" data-skin="jellyfish"><span class="skin-swatch swatch-jellyfish"></span>Медузы</a>
     </div>
 
     <div class="field-group" id="colorSection">
@@ -694,7 +720,7 @@
   <div class="start-footer">
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v13</div>
+    <div class="version-tag">v14</div>
   </div>
 </div>
 
@@ -717,7 +743,7 @@
 
   /* ---------- settings: skin ---------- */
 
-  var SKINS = ["volumetric", "fire", "neon", "fireplace", "ocean"];
+  var SKINS = ["volumetric", "fire", "neon", "fireplace", "ocean", "jellyfish"];
 
   function loadSetting(key, fallback) {
     try {
@@ -736,7 +762,8 @@
      one once its skin is actually selected, not on every page load */
   var BG_IMAGES = {
     fireplace: document.querySelector(".fireplace-bg"),
-    ocean: document.querySelector(".ocean-bg")
+    ocean: document.querySelector(".ocean-bg"),
+    jellyfish: document.querySelector(".jellyfish-bg")
   };
 
   function loadSkinBackground(name) {
