@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0a0b0d">
 <link rel="icon" href="icon-192.png">
@@ -400,19 +400,44 @@
   }
 
   .start-inner {
-    /* anchored top+bottom (not vertically centered) so it never jumps when
-       switching skins changes its content height -- classic/volumetric shows
-       extra card-color/background fields that fire/neon/ocean don't have */
+    /* box itself is anchored top+bottom (fixed position, never moves) so
+       switching skins -- which changes content height, since classic/
+       volumetric shows extra card-color/background fields -- can't make
+       anything jump. The variable-height content is centered INSIDE this
+       fixed box with flexbox instead, which is what actually looks centered
+       on screen without needing the box itself to move. Button/hint/version
+       live in the separate always-fixed .start-footer below, untouched by
+       any of this. */
     position: absolute;
-    top: 40px;
-    bottom: 40px;
+    top: 30px;
+    bottom: 130px;
     left: 50%;
     width: 420px;
     margin-left: -210px;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: center;
+    flex-direction: column;
+    justify-content: center;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     text-align: center;
     color: #f0e9da;
+  }
+
+  .start-scroll {
+    -webkit-box-flex: 0;
+    flex: 0 0 auto;
+  }
+
+  .start-footer {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    width: 420px;
+    margin-left: -210px;
+    text-align: center;
   }
 
   .start-title {
@@ -584,6 +609,7 @@
 
 <div class="start-screen" id="startScreen">
   <div class="start-inner">
+    <div class="start-scroll">
     <div class="start-title">XBB Flap Clock</div>
     <div class="start-sub">Настройка перед запуском</div>
 
@@ -638,9 +664,12 @@
       <a href="#" class="toggle" id="rotateToggle"><span class="toggle-knob"></span></a>
     </div>
 
+    </div>
+  </div>
+  <div class="start-footer">
     <a href="#" class="start-btn" id="startBtn">Готово</a>
     <div class="start-hint">Поделитесь &#8594; На экран «Домой» &mdash; для полноэкранного режима</div>
-    <div class="version-tag">v8</div>
+    <div class="version-tag">v9</div>
   </div>
 </div>
 
